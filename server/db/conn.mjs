@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const connectionString = process.env.ATLAS_URI || "";
 
-async function connectDB() {
+export default async function connectDB() {
 	try {
 		mongoose.set("strictQuery", true);
 		await mongoose.connect(connectionString, {
@@ -15,5 +15,3 @@ async function connectDB() {
 		process.exit(1);
 	}
 }
-
-export default connectDB;
