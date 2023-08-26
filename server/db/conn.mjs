@@ -1,16 +1,19 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 
 const connectionString = process.env.ATLAS_URI || "";
 
-const client = new MongoClient(connectionString);
+async function connectDB() {
+	try {
+		mongoose.set("strictQuery", true);
+		await mongoose.connect(connectionString, {
+			useNewUrlParser: true,
+		});
 
-let conn;
-try {
-	conn = await client.connect();
-} catch (e) {
-	console.error(e);
+		console.log("MongoDB is Connected...");
+	} catch (err) {
+		console.error(err.message);
+		process.exit(1);
+	}
 }
 
-let db = conn.db("sample_training");
-
-export default db;
+export default connectDB;
