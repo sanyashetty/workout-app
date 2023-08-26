@@ -1,19 +1,20 @@
 // models/Exercise.js
 
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema({
 	username: {
 		type: String,
-		required: true,
+		required: [true, "Your username is required"],
 	},
 	password: {
 		type: String,
-		required: true,
+		required: [true, "Your password is required"],
 	},
 	email: {
 		type: String,
-		required: true,
+		required: [true, "Your email address is required"],
 	},
 	workouts: [
 		{
@@ -32,8 +33,12 @@ const UserSchema = new mongoose.Schema({
 	updatedDate: {
 		type: Date,
 		default: Date.now,
-		required: true,
+		required: false,
 	},
+});
+
+UserSchema.pre("save", async function () {
+	this.password = await bcrypt.hash(this.password, 12);
 });
 
 const User = mongoose.model("user", UserSchema);

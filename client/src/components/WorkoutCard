@@ -1,0 +1,47 @@
+import React from "react";
+
+const WorkoutCard = ({ workout }) => {
+	return (
+		<div className="workout-card">
+			<h2>{workout.name}</h2>
+			<div className="exercises">
+				{workout.exercises.map((exercise) => (
+					<div key={exercise.id} className="exercise">
+						<p>Name: {exercise.name}</p>
+						<p>Sets: {exercise.sets}</p>
+						<p>Reps: {exercise.reps}</p>
+						<p>Weight: {exercise.weight} kg</p>
+						<button
+							onClick={() => {
+								/* edit exercise */
+							}}
+						>
+							Edit
+						</button>
+						<button
+							onClick={() => {
+								/* delete exercise */
+							}}
+						>
+							Delete
+						</button>
+					</div>
+				))}
+			</div>
+			<button
+				onClick={() => {
+					/* add new exercise to workout */
+				}}
+			>
+				Add Exercise
+			</button>
+			<button
+				onClick={() => {
+					/* delete workout */
+				}}
+			>
+				Delete Workout
+			</button>
+		</div>
+	);
+};

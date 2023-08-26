@@ -1,6 +1,8 @@
 // routes/UserRoutes.mjs
 import express from "express";
 import User from "../models/User.mjs";
+import { Signup, Login } from "../controllers/UserAuthController.mjs";
+import UserVerification from "../middlewares/UserAuthMiddleware.mjs";
 
 const router = express.Router();
 
@@ -21,25 +23,28 @@ router.get("/", (req, res) => {
 // @route GET api/users/:id
 // @description Get single user by id
 // @access Public
-router.get("/:id", (req, res) => {
+router.get("/by-id/:id", (req, res) => {
 	User.findById(req.params.id)
 		.then((user) => res.json(user))
 		.catch((err) => res.status(404).json({ nouserfound: "No User found" }));
 });
 
-// @route GET api/users
-// @description add/save user
+// @route POST api/users
+// @description sign up a new user
 // @access Public
-router.post("/", (req, res) => {
-	User.create(req.body)
-		.then((user) => res.json({ msg: "User added successfully" }))
-		.catch((err) => res.status(400).json({ error: "Unable to add this user" }));
-});
+router.post("/signup", Signup);
+
+// @route LOGIN api/users
+// @description log in as a user
+// @access Public
+router.post("/login", Login);
+
+router.post("/verify-user", UserVerification);
 
 // @route GET api/users/:id
 // @description Update user
 // @access Public
-router.put("/:id", (req, res) => {
+router.put("/by-id/:id", (req, res) => {
 	User.findByIdAndUpdate(req.params.id, req.body)
 		.then((user) => res.json({ msg: "Updated successfully" }))
 		.catch((err) =>
@@ -50,7 +55,7 @@ router.put("/:id", (req, res) => {
 // @route GET api/users/:id
 // @description Delete user by id
 // @access Public
-router.delete("/:id", (req, res) => {
+router.delete("/by-id/:id", (req, res) => {
 	User.findByIdAndRemove(req.params.id, req.body)
 		.then((user) => res.json({ mgs: "User deleted successfully" }))
 		.catch((err) => res.status(404).json({ error: "No such user" }));
