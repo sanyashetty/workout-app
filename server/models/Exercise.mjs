@@ -27,11 +27,11 @@ const ExerciseSchema = new mongoose.Schema({
 		type: Number,
 		required: false,
 	},
-	updatedDate: {
-		type: Date,
-		default: Date.now,
-		required: true,
-	},
+	// updatedDate: {
+	// 	type: Date,
+	// 	default: Date.now,
+	// 	required: true,
+	// },
 });
 
 const Exercise = mongoose.model("exercise", ExerciseSchema);

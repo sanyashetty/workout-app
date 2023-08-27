@@ -23,18 +23,11 @@ const UserSchema = new mongoose.Schema({
 			required: false,
 		},
 	],
-	exercises: [
-		{
-			type: mongoose.Schema.Types.ObjectId, //linking exercise and user together
-			ref: "Exercise",
-			required: false,
-		},
-	],
-	updatedDate: {
-		type: Date,
-		default: Date.now,
-		required: false,
-	},
+	// updatedDate: {
+	// 	type: Date,
+	// 	default: Date.now,
+	// 	required: false,
+	// },
 });
 
 UserSchema.pre("save", async function () {

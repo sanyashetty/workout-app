@@ -11,11 +11,11 @@ const WorkoutSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	updatedDate: {
-		type: Date,
-		default: Date.now,
-		required: true,
-	},
+	// updatedDate: {
+	// 	type: Date,
+	// 	default: Date.now,
+	// 	required: true,
+	// },
 	exercises: [
 		{
 			type: mongoose.Schema.Types.ObjectId, //linking exercise and workout together

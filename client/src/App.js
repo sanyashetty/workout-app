@@ -9,12 +9,13 @@ import {
 import axios from "axios";
 
 import Navbar from "./components/Navbar";
-import UserAuth from "./components/UserAuth";
-import Dashboard from "./components/Dashboard";
-import WorkoutModal from "./components/WorkoutModal";
-import ExerciseModal from "./components/ExerciseModal";
+import Home from "./pages/Home";
+import WorkoutCatalog from "./pages/WorkoutCatalog";
+import WorkoutTracker from "./pages/WorkoutTracker";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
-const App = () => {
+export default function App() {
 	return (
 		<Router>
 			<AppContent />
@@ -54,15 +55,19 @@ const AppContent = () => {
 
 	return (
 		<div className="App">
-			{location.pathname !== "/user-auth" && (
+			{(location.pathname !== "/login" && location.pathname !== "/register") && (
 				<Navbar isAuthenticated={isAuthenticated} />
 			)}
+			<div className={location.pathname === "/login" || location.pathname === "/register" ? "" : "pt-20"}>
+
 			<Routes>
-				<Route path="/" element={<Dashboard />} />
-				<Route path="/user-auth" element={<UserAuth />} />
+				<Route path="/" element={<Home />} />
+				<Route path="/workout-catalog" element={<WorkoutCatalog />} />
+				<Route path="/workout-tracker" element={<WorkoutTracker />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/register" element={<Register />} />
 			</Routes>
+		</div>
 		</div>
 	);
 };
-
-export default App;

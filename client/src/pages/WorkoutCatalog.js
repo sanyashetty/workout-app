@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import SearchBar from "./SearchBar";
-import WorkoutCard from "./WorkoutCard";
+import SearchBar from "../components/SearchBar";
+import WorkoutCard from "../components/WorkoutCard";
 
-const Dashboard = () => {
-	const [workouts, setWorkouts] = useState([]);
+const WorkoutCatalog = () => {
+	const [workouts, setWorkouts] = useState([{id:1, name:"test", exercises:[{id:1, name:"test", sets:1, reps:1, weight:1}]},{id:1, name:"test", exercises:[{id:1, name:"test", sets:1, reps:1, weight:1},{id:1, name:"test", sets:1, reps:1, weight:1}]}]);
 	const [query, setQuery] = useState("");
-	const [filteredWorkouts, setFilteredWorkouts] = useState([]);
+	const [filteredWorkouts, setFilteredWorkouts] = useState(workouts);
 
 	useEffect(() => {
 		// Fetch the user's workouts when the component mounts
@@ -40,16 +40,16 @@ const Dashboard = () => {
 	}, [query, workouts]);
 
 	return (
-		<div className="dashboard">
-			<SearchBar query={query} setQuery={setQuery} />
-			<h1>Your Workouts</h1>
-			<div className="workout-list">
+        <div className="p-8">
+        <SearchBar query={query} setQuery={setQuery} />
+            <h1 className="text-4xl font-bold my-4 flex items-center justify-center">Browse Workouts</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{filteredWorkouts.map((workout) => (
-					<WorkoutCard key={workout.id} workout={workout} />
+					<WorkoutCard key={workout.id} workout={workout} inCatalog={true} />
 				))}
 			</div>
 		</div>
 	);
 };
 
-export default Dashboard;
+export default WorkoutCatalog;
