@@ -21,7 +21,7 @@ export default function App() {
 			<AppContent />
 		</Router>
 	);
-};
+}
 
 const AppContent = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -47,27 +47,26 @@ const AppContent = () => {
 		checkAuthentication();
 	}, []);
 
-	// useEffect(() => {
-	// 	if (!isAuthenticated && location.pathname !== "/user-auth") {
-	// 		navigate("/user-auth");
-	// 	}
-	// }, [isAuthenticated, location, navigate]);
-
 	return (
 		<div className="App">
-			{(location.pathname !== "/login" && location.pathname !== "/register") && (
+			{location.pathname !== "/login" && location.pathname !== "/register" && (
 				<Navbar isAuthenticated={isAuthenticated} />
 			)}
-			<div className={location.pathname === "/login" || location.pathname === "/register" ? "" : "pt-20"}>
-
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/workout-catalog" element={<WorkoutCatalog />} />
-				<Route path="/workout-tracker" element={<WorkoutTracker />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/register" element={<Register />} />
-			</Routes>
-		</div>
+			<div
+				className={
+					location.pathname === "/login" || location.pathname === "/register"
+						? ""
+						: "pt-20"
+				}
+			>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/workout-catalog" element={<WorkoutCatalog />} />
+					<Route path="/workout-tracker" element={<WorkoutTracker />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
+				</Routes>
+			</div>
 		</div>
 	);
 };
