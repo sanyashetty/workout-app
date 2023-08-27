@@ -53,10 +53,10 @@ export default function Login() {
 	return (
 		<section
 			id="login"
-			className="p-8 dark:bg-gray-800 flex items-center justify-center min-h-screen"
+			className="p-8 bg-gray-800 flex items-center justify-center min-h-screen"
 		>
 			<div className="max-w-3xl mx-auto">
-				<h1 className="text-3xl lg:text-4xl font-bold mb-4 text-center dark:text-white">
+				<h1 className="text-3xl lg:text-4xl font-bold mb-4 text-center text-white">
 					Login
 				</h1>
 				<form className="space-y-4" onSubmit={login}>
@@ -85,7 +85,7 @@ export default function Login() {
 											setFunction(ev.target.value);
 										}}
 										required
-										className="border-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 p-2 my-3 dark:bg-gray-700 dark:text-white dark:border-gray-500 dark:focus:ring-orange-500 dark:focus:border-orange-500"
+										className="bg-gray-700 text-white border-2 border-gray-500 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 p-2 my-3"
 									/>
 								</div>
 							);
@@ -99,45 +99,21 @@ export default function Login() {
 					<div className="flex space-x-4 justify-center mt-4">
 						<button
 							type="submit"
-							className={`
-              rounded-2xl border-1 border-black 
-              bg-sunset_orange px-6 py-3 mx-2
-              font-semibold uppercase text-white
-              hover:rounded-md hover:bg-another_sunset
-              focus:ring-4 focus:outline-none focus:bg-another_sunset 
-              dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:bg-gray-600 
-              transition-all duration-300
-            `}
+							className="text-white bg-blue-500 rounded-lg px-4 py-2 hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 mx-1"
 						>
 							Login
 						</button>
 						<button
 							type="button"
 							onClick={goToRegister}
-							className={`
-              rounded-2xl border-1 border-black 
-  bg-sunset_orange px-6 py-3 mx-2
-  font-semibold uppercase text-white
-  hover:rounded-md hover:bg-another_sunset
-  focus:ring-4 focus:outline-none focus:bg-another_sunset 
-  dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:bg-gray-600 
-  transition-all duration-300
-            `}
+							className="text-white bg-blue-500 rounded-lg px-4 py-2 hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 mx-1"
 						>
 							Register
 						</button>
 						<button
 							type="button"
 							onClick={goToHome}
-							className={`
-              rounded-2xl border-1 border-black 
-  bg-sunset_orange px-6 py-3 mx-2
-  font-semibold uppercase text-white
-  hover:rounded-md hover:bg-another_sunset
-  focus:ring-4 focus:outline-none focus:bg-another_sunset 
-  dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:bg-gray-600 
-  transition-all duration-300
-            `}
+							className="text-white bg-blue-500 rounded-lg px-4 py-2 hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 mx-1"
 						>
 							Home
 						</button>
