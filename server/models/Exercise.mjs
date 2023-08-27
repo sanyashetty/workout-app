@@ -3,27 +3,31 @@
 import mongoose from "mongoose";
 
 const ExerciseSchema = new mongoose.Schema({
-	title: {
+	name: {
 		type: String,
 		required: true,
 	},
-	author: {
+	user: {
 		type: String,
 		required: true,
 	},
-	targetGroup: {
-		type: String,
-		required: false,
-	},
-	equipmentType: {
-		type: String,
-		required: false,
-	},
+	// targetGroup: {
+	// 	type: String,
+	// 	required: false,
+	// },
+	// equipmentType: {
+	// 	type: String,
+	// 	required: false,
+	// },
 	sets: {
 		type: Number,
 		required: false,
 	},
 	reps: {
+		type: Number,
+		required: false,
+	},
+	weights: {
 		type: Number,
 		required: false,
 	},

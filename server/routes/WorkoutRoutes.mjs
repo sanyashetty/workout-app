@@ -35,6 +35,7 @@ router.get("/by-id/:id", (req, res) => {
 // @description add/save workout
 // @access Public
 router.post("/", (req, res) => {
+	console.log(req.body);
 	Workout.create(req.body)
 		.then((workout) => res.json({ msg: "Workout added successfully" }))
 		.catch((err) =>

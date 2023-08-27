@@ -3,19 +3,14 @@
 import mongoose from "mongoose";
 
 const WorkoutSchema = new mongoose.Schema({
-	title: {
+	name: {
 		type: String,
 		required: true,
 	},
-	author: {
+	user: {
 		type: String,
 		required: true,
 	},
-	// updatedDate: {
-	// 	type: Date,
-	// 	default: Date.now,
-	// 	required: true,
-	// },
 	exercises: [
 		{
 			type: mongoose.Schema.Types.ObjectId, //linking exercise and workout together

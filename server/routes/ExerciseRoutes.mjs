@@ -31,18 +31,21 @@ router.get("/by-id/:id", (req, res) => {
 		);
 });
 
-// @route GET api/exercises
+// @route POST api/exercises
 // @description add/save exercise
 // @access Public
 router.post("/", (req, res) => {
+	console.log(req.body);
 	Exercise.create(req.body)
-		.then((exercise) => res.json({ msg: "Exercise added successfully" }))
+		.then((exercise) =>
+			res.json({ msg: "Exercise added successfully", exerciseId: exercise._id })
+		)
 		.catch((err) =>
 			res.status(400).json({ error: "Unable to add this exercise" })
 		);
 });
 
-// @route GET api/exercises/:id
+// @route UPDATE api/exercises/:id
 // @description Update exercise
 // @access Public
 router.put("/by-id/:id", (req, res) => {
@@ -53,7 +56,7 @@ router.put("/by-id/:id", (req, res) => {
 		);
 });
 
-// @route GET api/exercises/:id
+// @route DELETE api/exercises/:id
 // @description Delete exercise by id
 // @access Public
 router.delete("/by-id/:id", (req, res) => {
