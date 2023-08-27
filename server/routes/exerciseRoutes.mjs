@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
 // @route GET api/exercises/:id
 // @description Get single exercise by id
 // @access Public
-router.get("/:id", (req, res) => {
+router.get("by-id/:id", (req, res) => {
 	Exercise.findById(req.params.id)
 		.then((exercise) => res.json(exercise))
 		.catch((err) =>
@@ -45,7 +45,7 @@ router.post("/", (req, res) => {
 // @route GET api/exercises/:id
 // @description Update exercise
 // @access Public
-router.put("/:id", (req, res) => {
+router.put("by-id/:id", (req, res) => {
 	Exercise.findByIdAndUpdate(req.params.id, req.body)
 		.then((exercise) => res.json({ msg: "Updated successfully" }))
 		.catch((err) =>
@@ -56,7 +56,7 @@ router.put("/:id", (req, res) => {
 // @route GET api/exercises/:id
 // @description Delete exercise by id
 // @access Public
-router.delete("/:id", (req, res) => {
+router.delete("by-id/:id", (req, res) => {
 	Exercise.findByIdAndRemove(req.params.id, req.body)
 		.then((exercise) =>
 			res.json({ mgs: "Exercise entry deleted successfully" })

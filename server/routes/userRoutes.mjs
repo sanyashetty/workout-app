@@ -1,7 +1,7 @@
 // routes/UserRoutes.mjs
 import express from "express";
 import User from "../models/User.mjs";
-import { Signup, Login } from "../controllers/UserAuthController.mjs";
+import { Signup, Login, Logout } from "../controllers/UserAuthController.mjs";
 import UserVerification from "../middlewares/UserAuthMiddleware.mjs";
 
 const router = express.Router();
@@ -38,6 +38,11 @@ router.post("/signup", Signup);
 // @description log in as a user
 // @access Public
 router.post("/login", Login);
+
+// @route LOGOUT api/users
+// @description log out as a user
+// @access Public
+router.post("/logout", Logout);
 
 router.post("/verify-user", UserVerification);
 

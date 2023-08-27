@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
 // @route GET api/workouts/:id
 // @description Get single workout by id
 // @access Public
-router.get("/:id", (req, res) => {
+router.get("by-id/:id", (req, res) => {
 	Workout.findById(req.params.id)
 		.then((workout) => res.json(workout))
 		.catch((err) =>
@@ -45,7 +45,7 @@ router.post("/", (req, res) => {
 // @route UPDATE api/workouts/:id
 // @description Update workout
 // @access Public
-router.put("/:id", (req, res) => {
+router.put("by-id/:id", (req, res) => {
 	Workout.findByIdAndUpdate(req.params.id, req.body)
 		.then((workout) => res.json({ msg: "Updated successfully" }))
 		.catch((err) =>
@@ -56,7 +56,7 @@ router.put("/:id", (req, res) => {
 // @route DELETE api/workout/:id
 // @description Delete workout by id
 // @access Public
-router.delete("/:id", (req, res) => {
+router.delete("by-id/:id", (req, res) => {
 	Workout.findByIdAndRemove(req.params.id, req.body)
 		.then((workout) => res.json({ mgs: "Workout entry deleted successfully" }))
 		.catch((err) => res.status(404).json({ error: "No such workout" }));

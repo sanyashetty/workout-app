@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL.replace(/[";]/g, "");
 
 export default function Register() {
 	const [username, setUsername] = useState("");
@@ -23,9 +23,9 @@ export default function Register() {
 			});
 
 			if (response.ok) {
-				alert("Login successful!");
+				alert("Registration successful!");
 				const userInfo = await response.json();
-				setUserInfo(userInfo);
+				setUserInfo(userInfo.user);
 				setRedirect(true);
 			} else {
 				response.json().then((errorData) => {
@@ -61,9 +61,9 @@ export default function Register() {
 							[username, "Username", setUsername],
 							[email, "Email", setEmail],
 							[password, "Password", setPassword],
-						].map(([value, uppercase, setFunction]) => {
+						].map(([value, uppercase, setFunction], index) => {
 							return (
-								<div className="flex items-center space-x-4">
+								<div className="flex items-center space-x-4" key={index}>
 									<label
 										htmlFor={value}
 										className="text-sm font-medium text-gray-700 w-28"
@@ -73,7 +73,7 @@ export default function Register() {
 									</label>
 									<input
 										type={uppercase === "Password" ? "password" : "text"}
-										id={value}
+										id={index}
 										placeholder={"Enter " + uppercase + "..."}
 										value={value}
 										onChange={(ev) => {
