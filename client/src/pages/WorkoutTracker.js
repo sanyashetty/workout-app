@@ -80,7 +80,7 @@ const WorkoutTracker = () => {
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 						{fetchedWorkouts.map((workout) => (
 							<WorkoutCard
-								key={workout.id}
+								key={workout._id}
 								workout={workout}
 								inTracker={true}
 							/>

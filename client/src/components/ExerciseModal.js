@@ -9,7 +9,7 @@ const ExerciseModal = ({ closeModal, workoutId, currentExercise = null }) => {
 	);
 	const [sets, setSets] = useState(currentExercise ? currentExercise.sets : "");
 	const [reps, setReps] = useState(currentExercise ? currentExercise.reps : "");
-	const [weight, setWeight] = useState(
+	const [weights, setWeights] = useState(
 		currentExercise ? currentExercise.weights : ""
 	);
 
@@ -21,7 +21,7 @@ const ExerciseModal = ({ closeModal, workoutId, currentExercise = null }) => {
 			user: userInfo?.username,
 			sets,
 			reps,
-			weight,
+			weights,
 		};
 
 		if (currentExercise) {
@@ -87,8 +87,8 @@ const ExerciseModal = ({ closeModal, workoutId, currentExercise = null }) => {
 				/>
 				<input
 					className="w-full p-2 mb-4 border rounded"
-					value={weight}
-					onChange={(e) => setWeight(e.target.value)}
+					value={weights}
+					onChange={(e) => setWeights(e.target.value)}
 					placeholder="Weight (lbs)"
 				/>
 

@@ -27,7 +27,32 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 	const closeWorkoutModal = () => {
 		setIsWorkoutModalOpen(false);
 	};
-	const addWorkout = () => {}; // ADD LOGIC, check if logged in first, then add workout to user's workouts
+	const addWorkout = async () => {
+		// Check if user is logged in
+		if (!userInfo) {
+			console.error("User not logged in!");
+			return;
+		}
+
+		// Check if user's workouts array contains this workout
+		const userWorkouts = userInfo.workouts || [];
+		if (userWorkouts.includes(workout._id)) {
+			console.log("Workout already added!");
+			return;
+		}
+
+		// Add workout to user's workouts array and update user info
+		const updatedWorkouts = [...userWorkouts, workout._id];
+		try {
+			await axios.put(`${API_URL}/api/users/by-id/${userInfo._id}`, {
+				workouts: updatedWorkouts,
+			});
+			setUserInfo({ ...userInfo, workouts: updatedWorkouts });
+			console.log("Workout added successfully!");
+		} catch (error) {
+			console.error("Failed to add workout to user's workouts", error);
+		}
+	};
 
 	const fetchExercises = async () => {
 		try {
