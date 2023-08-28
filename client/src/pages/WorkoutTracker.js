@@ -3,21 +3,16 @@ import { UserContext } from "../contexts/UserContext";
 import WorkoutCard from "../components/WorkoutCard";
 import { Navigate } from "react-router-dom";
 import WorkoutModal from "../components/WorkoutModal";
-import ExerciseModal from "../components/ExerciseModal";
 import axios from "axios";
+import { useForceRefresh } from "../utils/ForceRefresh";
 
 const API_URL = process.env.REACT_APP_API_URL.replace(/[";]/g, "");
 
 const WorkoutTracker = () => {
 	const { userInfo } = useContext(UserContext);
 	const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
-	const [isExerciseModalOpen, setIsExerciseModalOpen] = useState(false);
-	const [currentExercise, setCurrentExercise] = useState(null);
 	const [fetchedWorkouts, setFetchedWorkouts] = useState([]);
-
-	const closeExerciseModal = () => {
-		setIsExerciseModalOpen(false);
-	};
+	const [refreshKey, forceRefresh] = useForceRefresh();
 
 	const fetchWorkouts = async () => {
 		try {
@@ -38,8 +33,9 @@ const WorkoutTracker = () => {
 
 	const closeWorkoutModal = () => {
 		setIsWorkoutModalOpen(false);
-		// Refresh the workouts list here if needed
 		fetchWorkouts();
+		// Refresh the workouts list here if needed
+		forceRefresh();
 	};
 
 	useEffect(() => {
@@ -61,7 +57,7 @@ const WorkoutTracker = () => {
 		};
 
 		fetchWorkouts();
-	}, [userInfo?.workouts]);
+	}, [userInfo?.workouts, refreshKey]);
 
 	return (
 		<div>
@@ -83,6 +79,8 @@ const WorkoutTracker = () => {
 								key={workout._id}
 								workout={workout}
 								inTracker={true}
+								forceRefresh={forceRefresh}
+								refreshKey={refreshKey}
 							/>
 						))}
 					</div>

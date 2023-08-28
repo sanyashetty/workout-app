@@ -6,7 +6,13 @@ import { UserContext } from "../contexts/UserContext";
 
 const API_URL = process.env.REACT_APP_API_URL.replace(/[";]/g, "");
 
-const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
+const WorkoutCard = ({
+	workout,
+	inTracker,
+	inCatalog,
+	forceRefresh,
+	refreshKey,
+}) => {
 	const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
 	const [isExerciseModalOpen, setIsExerciseModalOpen] = useState(false);
 	const [currentExercise, setCurrentExercise] = useState(null);
@@ -21,12 +27,16 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 	const closeExerciseModal = () => {
 		setIsExerciseModalOpen(false);
 		fetchExercises();
+		// Refresh the workout card
+		forceRefresh();
 	};
 	const openWorkoutModal = () => {
 		setIsWorkoutModalOpen(true);
 	};
 	const closeWorkoutModal = () => {
 		setIsWorkoutModalOpen(false);
+		// Refresh the workout card
+		forceRefresh();
 	};
 	const addWorkout = async () => {
 		// Check if user is logged in
@@ -49,7 +59,6 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 				workouts: updatedWorkouts,
 			});
 			setUserInfo({ ...userInfo, workouts: updatedWorkouts });
-			console.log("Workout added successfully!");
 		} catch (error) {
 			console.error("Failed to add workout to user's workouts", error);
 		}
@@ -92,7 +101,7 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 		};
 
 		fetchExercises();
-	}, [workout]);
+	}, [workout?.exercises, fetchedExercises, refreshKey]);
 
 	const deleteExercise = async (exerciseId) => {
 		try {
@@ -106,8 +115,8 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 
 			await axios.delete(`${API_URL}/api/exercises/by-id/${exerciseId}`);
 			fetchExercises();
-
-			// Refresh the data or remove the exercise from state
+			forceRefresh();
+			console.log("Exercise deleted successfully!");
 		} catch (error) {
 			console.error("Failed to delete exercise", error);
 		}
@@ -165,7 +174,7 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 						className="text-blue-600 hover:text-blue-800"
 						onClick={openWorkoutModal}
 					>
-						Edit Workout
+						Edit Workout Name
 					</button>
 				</>
 			)}
