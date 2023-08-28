@@ -12,6 +12,7 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 	const [currentExercise, setCurrentExercise] = useState(null);
 	const [fetchedExercises, setFetchedExercises] = useState([]);
 	const { userInfo, setUserInfo } = useContext(UserContext);
+	const isCreator = userInfo?.username === workout?.user;
 
 	const openExerciseModal = (exercise) => {
 		setCurrentExercise(exercise);
@@ -114,19 +115,32 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 
 	const deleteWorkout = async (workoutId) => {
 		try {
+			// Fetch the workout details to get the creator's ID
+			const workoutResponse = await axios.get(
+				`${API_URL}/api/workouts/by-id/${workoutId}`
+			);
+			const workoutCreatorId = workoutResponse.data.creatorId;
+
 			const currentWorkouts = userInfo.workouts || [];
 			const updatedWorkouts = currentWorkouts.filter(
 				(workout) => workout !== workoutId
 			);
 
-			setUserInfo({ ...userInfo, workouts: updatedWorkouts });
+			if (isCreator) {
+				// User is the creator
+				await axios.delete(`${API_URL}/api/workouts/by-id/${workoutId}`);
+				console.log("Workout deleted from the database");
+			} else {
+				// User is not the creator
+				console.log("Workout removed from user's list");
+			}
 
-			await axios.put(`${API_URL}/api/users/by-id/${userInfo?._id}`, {
+			// Update the user's workouts list in both cases
+			await axios.put(`${API_URL}/api/users/by-id/${userInfo._id}`, {
 				workouts: updatedWorkouts,
 			});
 
-			await axios.delete(`${API_URL}/api/workouts/by-id/${workoutId}`);
-			// Refresh the data or remove the workout from state
+			setUserInfo({ ...userInfo, workouts: updatedWorkouts });
 		} catch (error) {
 			console.error("Failed to delete workout", error);
 		}
@@ -145,7 +159,7 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 					</button>
 				</>
 			)}
-			{inTracker && (
+			{inTracker && isCreator && (
 				<>
 					<button
 						className="text-blue-600 hover:text-blue-800"
@@ -157,12 +171,12 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 			)}
 			<div className="mt-4">
 				{fetchedExercises.map((exercise) => (
-					<div key={exercise?.id} className="my-2 p-2 border rounded">
+					<div key={exercise?._id} className="my-2 p-2 border rounded">
 						<p>Name: {exercise?.name}</p>
 						<p>Sets: {exercise?.sets}</p>
 						<p>Reps: {exercise?.reps}</p>
 						<p>Weight: {exercise?.weights} lbs</p>
-						{inTracker && (
+						{inTracker && isCreator && (
 							<>
 								<button
 									className="text-blue-600 hover:text-blue-800"
@@ -186,14 +200,16 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 			</div>
 			{inTracker && (
 				<>
-					<button
-						className="text-blue-600 hover:text-blue-800 mt-4"
-						onClick={() => {
-							openExerciseModal();
-						}}
-					>
-						Add Exercise
-					</button>
+					{isCreator && (
+						<button
+							className="text-blue-600 hover:text-blue-800 mt-4"
+							onClick={() => {
+								openExerciseModal();
+							}}
+						>
+							Add Exercise
+						</button>
+					)}
 					<button
 						className="text-red-600 hover:text-red-800 mt-4"
 						onClick={() => {
