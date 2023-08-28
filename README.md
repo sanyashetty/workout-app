@@ -1,6 +1,10 @@
 # FitLog: Workout Tracker
 
+Link: http://workout-client.s3-website.us-east-2.amazonaws.com/
+
 FitLog is a MERN stack application crafted to enable users to create, manage, and monitor their fitness routines. Users are able to log in to the website, view their workouts, and create/log new workouts. Each workout consists of multiple exercises, where you can specify sets, reps, and weights.
+
+The Workout Catalog contains all exercises uploaded by any user, while the Workout Tracker includes only the current user's exercises. If a user chooses to add an exercise from the catalog, it will be added to their own Workout Tracker (they will not have edit privileges unless they were the author of the website).
 
 ## Features
 
