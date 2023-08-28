@@ -33,4 +33,4 @@ The Workout Catalog contains all exercises uploaded by any user, while the Worko
 - **Exercise Logging**: within every workout, integrate exercises, noting sets, reps, and weights.
 - **Search Functionality**: locate workouts with a search. -->
 
-## Time spent developing: ~ 10 hours
+## Time spent developing: ~ 14 hours
