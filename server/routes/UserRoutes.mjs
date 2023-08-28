@@ -46,7 +46,7 @@ router.post("/logout", Logout);
 
 router.post("/verify-user", UserVerification);
 
-// @route GET api/users/:id
+// @route UPDATE api/users/:id
 // @description Update user
 // @access Public
 router.put("/by-id/:id", (req, res) => {
@@ -57,7 +57,7 @@ router.put("/by-id/:id", (req, res) => {
 		);
 });
 
-// @route GET api/users/:id
+// @route DELETE api/users/:id
 // @description Delete user by id
 // @access Public
 router.delete("/by-id/:id", (req, res) => {

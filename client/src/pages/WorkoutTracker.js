@@ -1,23 +1,67 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import WorkoutCard from "../components/WorkoutCard";
 import { Navigate } from "react-router-dom";
 import WorkoutModal from "../components/WorkoutModal";
 import ExerciseModal from "../components/ExerciseModal";
+import axios from "axios";
+
+const API_URL = process.env.REACT_APP_API_URL.replace(/[";]/g, "");
 
 const WorkoutTracker = () => {
 	const { userInfo } = useContext(UserContext);
 	const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
 	const [isExerciseModalOpen, setIsExerciseModalOpen] = useState(false);
 	const [currentExercise, setCurrentExercise] = useState(null);
+	const [fetchedWorkouts, setFetchedWorkouts] = useState([]);
+
 	const closeExerciseModal = () => {
 		setIsExerciseModalOpen(false);
+	};
+
+	const fetchWorkouts = async () => {
+		try {
+			let detailedWorkouts = [];
+
+			for (let workout of userInfo?.workouts) {
+				let response = await axios.get(
+					`${API_URL}/api/workouts/by-id/${workout}`
+				);
+				detailedWorkouts.push(response.data);
+			}
+
+			setFetchedWorkouts(detailedWorkouts);
+		} catch (error) {
+			console.error("Failed to fetch exercise details", error);
+		}
 	};
 
 	const closeWorkoutModal = () => {
 		setIsWorkoutModalOpen(false);
 		// Refresh the workouts list here if needed
+		fetchWorkouts();
 	};
+
+	useEffect(() => {
+		const fetchWorkouts = async () => {
+			try {
+				let detailedWorkouts = [];
+
+				for (let workout of userInfo?.workouts) {
+					let response = await axios.get(
+						`${API_URL}/api/workouts/by-id/${workout}`
+					);
+					detailedWorkouts.push(response.data);
+				}
+
+				setFetchedWorkouts(detailedWorkouts);
+			} catch (error) {
+				console.error("Failed to fetch exercise details", error);
+			}
+		};
+
+		fetchWorkouts();
+	}, [userInfo?.workouts]);
 
 	return (
 		<div>
@@ -34,7 +78,7 @@ const WorkoutTracker = () => {
 						Create New Workout
 					</button>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{userInfo?.workouts.map((workout) => (
+						{fetchedWorkouts.map((workout) => (
 							<WorkoutCard
 								key={workout.id}
 								workout={workout}

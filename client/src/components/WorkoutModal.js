@@ -36,7 +36,6 @@ const WorkoutModal = ({ closeModal, currentWorkout = null }) => {
 
 	const handleSubmit = async () => {
 		try {
-			// First, save each exercise to the backend and collect their returned IDs
 			const exerciseIds = [];
 			for (const exercise of exercises) {
 				const response = await axios.post(
@@ -50,20 +49,26 @@ const WorkoutModal = ({ closeModal, currentWorkout = null }) => {
 				}
 			}
 
-			// Once all exercises are saved, proceed with saving the workout
 			if (currentWorkout) {
 				// Update the workout
-				await axios.put(`${API_URL}/api/workouts/by-id/${currentWorkout.id}`, {
+				await axios.put(`${API_URL}/api/workouts/by-id/${currentWorkout._id}`, {
+					name: workoutName,
+				});
+			} else {
+				// Create a new workout
+				const response = await axios.post(`${API_URL}/api/workouts/`, {
 					name: workoutName,
 					user: userInfo?.username,
 					exercises: exerciseIds, // Note: This should now be the list of IDs
 				});
-			} else {
-				// Create a new workout
-				await axios.post(`${API_URL}/api/workouts/`, {
-					name: workoutName,
-					user: userInfo?.username,
-					exercises: exerciseIds, // Note: This should now be the list of IDs
+				const newWorkoutId = response.data.workoutId;
+
+				// Add the workout to the current user
+				const currentWorkouts = userInfo.workouts || [];
+				const updatedWorkouts = [...currentWorkouts, newWorkoutId];
+				setUserInfo({ ...userInfo, workouts: updatedWorkouts });
+				await axios.put(`${API_URL}/api/users/by-id/${userInfo?._id}`, {
+					workouts: updatedWorkouts,
 				});
 			}
 
@@ -87,41 +92,43 @@ const WorkoutModal = ({ closeModal, currentWorkout = null }) => {
 					onChange={(e) => setWorkoutName(e.target.value)}
 					placeholder="Workout Name"
 				/>
-				<div className="mb-4">
-					<input
-						className="w-full p-2 mb-2 border rounded"
-						value={exerciseName}
-						onChange={(e) => setExerciseName(e.target.value)}
-						placeholder="New Exercise"
-					/>
-					<input
-						type="number"
-						className="w-full p-2 mb-2 border rounded"
-						value={sets}
-						onChange={(e) => setSets(e.target.valueAsNumber)}
-						placeholder="Sets"
-					/>
-					<input
-						type="number"
-						className="w-full p-2 mb-2 border rounded"
-						value={reps}
-						onChange={(e) => setReps(e.target.valueAsNumber)}
-						placeholder="Reps"
-					/>
-					<input
-						type="number"
-						className="w-full p-2 mb-2 border rounded"
-						value={weights}
-						onChange={(e) => setWeights(e.target.valueAsNumber)}
-						placeholder="Weight (lbs)"
-					/>
-					<button
-						onClick={addExercise}
-						className="mt-2 w-full bg-green-500 text-white py-1 px-2 rounded"
-					>
-						Add Exercise
-					</button>
-				</div>
+				{!currentWorkout && (
+					<div className="mb-4">
+						<input
+							className="w-full p-2 mb-2 border rounded"
+							value={exerciseName}
+							onChange={(e) => setExerciseName(e.target.value)}
+							placeholder="New Exercise"
+						/>
+						<input
+							type="number"
+							className="w-full p-2 mb-2 border rounded"
+							value={sets}
+							onChange={(e) => setSets(e.target.valueAsNumber)}
+							placeholder="Sets"
+						/>
+						<input
+							type="number"
+							className="w-full p-2 mb-2 border rounded"
+							value={reps}
+							onChange={(e) => setReps(e.target.valueAsNumber)}
+							placeholder="Reps"
+						/>
+						<input
+							type="number"
+							className="w-full p-2 mb-2 border rounded"
+							value={weights}
+							onChange={(e) => setWeights(e.target.valueAsNumber)}
+							placeholder="Weight (lbs)"
+						/>
+						<button
+							onClick={addExercise}
+							className="mt-2 w-full bg-green-500 text-white py-1 px-2 rounded"
+						>
+							Add Exercise
+						</button>
+					</div>
+				)}
 				<ul>
 					{exercises.map((ex, index) => (
 						<li key={index} className="mb-2">

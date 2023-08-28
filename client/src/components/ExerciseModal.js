@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 import axios from "axios";
 const API_URL = process.env.REACT_APP_API_URL.replace(/[";]/g, "");
 
@@ -9,24 +10,50 @@ const ExerciseModal = ({ closeModal, workoutId, currentExercise = null }) => {
 	const [sets, setSets] = useState(currentExercise ? currentExercise.sets : "");
 	const [reps, setReps] = useState(currentExercise ? currentExercise.reps : "");
 	const [weight, setWeight] = useState(
-		currentExercise ? currentExercise.weight : ""
+		currentExercise ? currentExercise.weights : ""
 	);
 
+	const { userInfo, setUserInfo } = useContext(UserContext);
+
 	const handleSubmit = async () => {
-		const exerciseData = { name: exerciseName, sets, reps, weight };
+		const exerciseData = {
+			name: exerciseName,
+			user: userInfo?.username,
+			sets,
+			reps,
+			weight,
+		};
 
 		if (currentExercise) {
 			// Update the exercise
 			await axios.put(
-				`${API_URL}/api/workouts/${workoutId}/exercises/${currentExercise.id}`,
+				`${API_URL}/api/exercises/by-id/${currentExercise._id}`,
 				exerciseData
 			);
 		} else {
 			// Create a new exercise
-			await axios.post(
-				`${API_URL}/api/workouts/${workoutId}/exercises`,
+			const response = await axios.post(
+				`${API_URL}/api/exercises/`,
 				exerciseData
 			);
+
+			const exerciseId = response.data.exerciseId;
+
+			if (workoutId) {
+				const workoutResponse = await axios.get(
+					`${API_URL}/api/workouts/by-id/${workoutId}`
+				);
+				const workout = workoutResponse.data;
+
+				const currentExercises = workout.exercises || [];
+				const updatedExercises = [...currentExercises, exerciseId];
+
+				// Update the workout on the server
+
+				await axios.put(`${API_URL}/api/workouts/by-id/${workoutId}`, {
+					exercises: updatedExercises,
+				});
+			}
 		}
 
 		// Close the modal and refresh data
@@ -62,7 +89,7 @@ const ExerciseModal = ({ closeModal, workoutId, currentExercise = null }) => {
 					className="w-full p-2 mb-4 border rounded"
 					value={weight}
 					onChange={(e) => setWeight(e.target.value)}
-					placeholder="Weight (kg)"
+					placeholder="Weight (lbs)"
 				/>
 
 				<button

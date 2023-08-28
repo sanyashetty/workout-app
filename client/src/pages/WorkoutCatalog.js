@@ -5,21 +5,7 @@ import WorkoutCard from "../components/WorkoutCard";
 const API_URL = process.env.REACT_APP_API_URL.replace(/[";]/g, "");
 
 const WorkoutCatalog = () => {
-	const [workouts, setWorkouts] = useState([
-		{
-			id: 1,
-			name: "test",
-			exercises: [{ id: 1, name: "test", sets: 1, reps: 1, weight: 1 }],
-		},
-		{
-			id: 1,
-			name: "test",
-			exercises: [
-				{ id: 1, name: "test", sets: 1, reps: 1, weight: 1 },
-				{ id: 1, name: "test", sets: 1, reps: 1, weight: 1 },
-			],
-		},
-	]);
+	const [workouts, setWorkouts] = useState([]);
 	const [query, setQuery] = useState("");
 	const [filteredWorkouts, setFilteredWorkouts] = useState(workouts);
 
@@ -56,7 +42,7 @@ const WorkoutCatalog = () => {
 
 	return (
 		<div className="p-8">
-			<SearchBar query={query} setQuery={setQuery} />
+			{/* <SearchBar query={query} setQuery={setQuery} /> */}
 			<h1 className="text-4xl font-bold my-4 flex items-center justify-center">
 				Browse Workouts
 			</h1>

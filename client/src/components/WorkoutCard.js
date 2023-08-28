@@ -1,19 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import WorkoutModal from "./WorkoutModal";
 import ExerciseModal from "./ExerciseModal";
 import axios from "axios";
+import { UserContext } from "../contexts/UserContext";
+
 const API_URL = process.env.REACT_APP_API_URL.replace(/[";]/g, "");
 
 const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 	const [isWorkoutModalOpen, setIsWorkoutModalOpen] = useState(false);
 	const [isExerciseModalOpen, setIsExerciseModalOpen] = useState(false);
 	const [currentExercise, setCurrentExercise] = useState(null);
+	const [fetchedExercises, setFetchedExercises] = useState([]);
+	const { userInfo, setUserInfo } = useContext(UserContext);
+
 	const openExerciseModal = (exercise) => {
 		setCurrentExercise(exercise);
 		setIsExerciseModalOpen(true);
 	};
 	const closeExerciseModal = () => {
 		setIsExerciseModalOpen(false);
+		fetchExercises();
 	};
 	const openWorkoutModal = () => {
 		setIsWorkoutModalOpen(true);
@@ -22,9 +28,59 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 		setIsWorkoutModalOpen(false);
 	};
 	const addWorkout = () => {}; // ADD LOGIC, check if logged in first, then add workout to user's workouts
+
+	const fetchExercises = async () => {
+		try {
+			let detailedExercises = [];
+
+			for (let exercise of workout?.exercises) {
+				let response = await axios.get(
+					`${API_URL}/api/exercises/by-id/${exercise}`
+				);
+				detailedExercises.push(response.data);
+			}
+
+			setFetchedExercises(detailedExercises);
+		} catch (error) {
+			console.error("Failed to fetch exercise details", error);
+		}
+	};
+
+	useEffect(() => {
+		// Fetch each exercise's detailed data
+		const fetchExercises = async () => {
+			try {
+				let detailedExercises = [];
+
+				for (let exercise of workout?.exercises) {
+					let response = await axios.get(
+						`${API_URL}/api/exercises/by-id/${exercise}`
+					);
+					detailedExercises.push(response.data);
+				}
+
+				setFetchedExercises(detailedExercises);
+			} catch (error) {
+				console.error("Failed to fetch exercise details", error);
+			}
+		};
+
+		fetchExercises();
+	}, [workout]);
+
 	const deleteExercise = async (exerciseId) => {
 		try {
-			await axios.delete(`${API_URL}/api/exercises/${exerciseId}`);
+			const updatedExercises = fetchedExercises.filter(
+				(exercise) => exercise._id !== exerciseId
+			);
+
+			await axios.put(`${API_URL}/api/workouts/by-id/${workout?._id}`, {
+				exercises: updatedExercises,
+			});
+
+			await axios.delete(`${API_URL}/api/exercises/by-id/${exerciseId}`);
+			fetchExercises();
+
 			// Refresh the data or remove the exercise from state
 		} catch (error) {
 			console.error("Failed to delete exercise", error);
@@ -33,7 +89,18 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 
 	const deleteWorkout = async (workoutId) => {
 		try {
-			await axios.delete(`/api/workouts/${workoutId}`);
+			const currentWorkouts = userInfo.workouts || [];
+			const updatedWorkouts = currentWorkouts.filter(
+				(workout) => workout !== workoutId
+			);
+
+			setUserInfo({ ...userInfo, workouts: updatedWorkouts });
+
+			await axios.put(`${API_URL}/api/users/by-id/${userInfo?._id}`, {
+				workouts: updatedWorkouts,
+			});
+
+			await axios.delete(`${API_URL}/api/workouts/by-id/${workoutId}`);
 			// Refresh the data or remove the workout from state
 		} catch (error) {
 			console.error("Failed to delete workout", error);
@@ -64,12 +131,12 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 				</>
 			)}
 			<div className="mt-4">
-				{workout?.exercises.map((exercise) => (
+				{fetchedExercises.map((exercise) => (
 					<div key={exercise?.id} className="my-2 p-2 border rounded">
 						<p>Name: {exercise?.name}</p>
 						<p>Sets: {exercise?.sets}</p>
 						<p>Reps: {exercise?.reps}</p>
-						<p>Weight: {exercise?.weight} kg</p>
+						<p>Weight: {exercise?.weights} lbs</p>
 						{inTracker && (
 							<>
 								<button
@@ -82,7 +149,7 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 									className="text-red-600 hover:text-red-800"
 									onClick={() => {
 										/* delete exercise */
-										deleteExercise(exercise.id);
+										deleteExercise(exercise._id);
 									}}
 								>
 									Delete Exercise
@@ -97,7 +164,7 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 					<button
 						className="text-blue-600 hover:text-blue-800 mt-4"
 						onClick={() => {
-							/* add new exercise to workout */
+							openExerciseModal();
 						}}
 					>
 						Add Exercise
@@ -106,7 +173,7 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 						className="text-red-600 hover:text-red-800 mt-4"
 						onClick={() => {
 							/* delete workout */
-							deleteWorkout(workout.id);
+							deleteWorkout(workout._id);
 						}}
 					>
 						Delete Workout
@@ -124,7 +191,7 @@ const WorkoutCard = ({ workout, inTracker, inCatalog }) => {
 					{isExerciseModalOpen && (
 						<ExerciseModal
 							closeModal={closeExerciseModal}
-							workoutId={workout?.id}
+							workoutId={workout?._id}
 							currentExercise={currentExercise}
 						/>
 					)}

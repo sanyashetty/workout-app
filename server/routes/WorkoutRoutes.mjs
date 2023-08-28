@@ -37,7 +37,9 @@ router.get("/by-id/:id", (req, res) => {
 router.post("/", (req, res) => {
 	console.log(req.body);
 	Workout.create(req.body)
-		.then((workout) => res.json({ msg: "Workout added successfully" }))
+		.then((workout) =>
+			res.json({ msg: "Workout added successfully", workoutId: workout._id })
+		)
 		.catch((err) =>
 			res.status(400).json({ error: "Unable to add this workout" })
 		);
@@ -54,7 +56,7 @@ router.put("/by-id/:id", (req, res) => {
 		);
 });
 
-// @route DELETE api/workout/:id
+// @route DELETE api/workouts/:id
 // @description Delete workout by id
 // @access Public
 router.delete("/by-id/:id", (req, res) => {
