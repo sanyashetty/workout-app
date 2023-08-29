@@ -24,9 +24,9 @@ The Workout Catalog contains all exercises uploaded by any user, while the Worko
 
 - Linking together a frontend framework with a backend framework (React with Node, using axios)
 
-### Misc.
+### Deployment
 
-- Deployed site using Heroku
+- Deployed site using AWS S3, EC2, and MongoDB Atlas
 
 <!-- - **User Authentication**: sign up, log in, and oversee your profile.
 - **Workout Management**: add, modify, remove, and review detailed data of each workout session.
